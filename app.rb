@@ -35,3 +35,19 @@ get("/random/results") do
   @num_random_result = rand(@num_user_min_input..@num_user_max_input)
   erb(:random_results)
 end
+
+get("/payment/new") do
+  erb(:payment_new)
+end
+
+get("/payment/results") do
+  @user_apr_input = params.fetch("user_apr").to_f
+  @monthly_apr = @user_apr_input / 100 / 12
+  @user_years_input = params.fetch("user_years").to_i
+  @months = @user_years_input * 12
+  @user_pv_input = params.fetch("user_pv").to_f
+  @numerator = @monthly_apr * @user_pv_input
+  @denominator = 1 - (1 + @monthly_apr) ** (@months * (-1))
+  @payment_result = @numerator / @denominator
+  erb(:payment_results)
+end
